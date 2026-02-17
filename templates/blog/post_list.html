@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Blog" %} – {% trans "Maqolalar" %}{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <!-- Sarlavha -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10 text-center">
+            <h1 class="display-4 fw-bold mb-3">{% trans "Maqolalar" %}</h1>
+            <p class="lead text-muted">
+                {% trans "Python, Django, backend dasturlash, moliya va boshqa qiziqarli mavzularda yangi maqolalar" %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Qidiruv va filtr formasi -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10">
+            <form method="get" class="row g-3">
+                <div class="col-md-5">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        class="form-control form-control-lg" 
+                        placeholder="{% trans 'Qidiruv... (masalan: Django, Python)' %}" 
+                        value="{{ request.GET.q|default:'' }}"
+                    >
+                </div>
+
+                <div class="col-md-4">
+                    <select name="category" class="form-select form-select-lg">
+                        <option value="">{% trans "Barcha kategoriyalar" %}</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}"
+                                {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+                                {{ cat.name }}
+                            </option>
+                        {% empty %}
+                            <option disabled>{% trans "Hozircha kategoriyalar yo‘q" %}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        {% trans "Qidirish" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Postlar ro'yxati -->
+    {% if posts %}
+        <div class="row g-4">
+            {% for post in posts %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                        {% if post.base_image %}
+                            <img src="{{ post.base_image.url }}" 
+                                 class="card-img-top" 
+                                 alt="{{ post.title }}" 
+                                 style="height: 220px; object-fit: cover;">
+                        {% else %}
+                            <img src="{% static 'img/placeholder-blog.jpg' %}" 
+                                 class="card-img-top" 
+                                 alt="Placeholder" 
+                                 style="height: 220px; object-fit: cover;">
+                        {% endif %}
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title fw-semibold mb-3 line-clamp-2">
+                                {{ post.title }}
+                            </h5>
+
+                            <p class="card-text text-muted mb-3 flex-grow-1 line-clamp-3">
+                                {{ post.excerpt|safe|truncatewords:35 }}
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center mt-auto small text-muted">
+                                <div>
+                                    <i class="bi bi-clock me-1"></i> {{ post.reading_time }} daq
+                                    <span class="mx-2">•</span>
+                                    <i class="bi bi-eye me-1"></i> {{ post.views }}
+                                </div>
+                                <a href="{% url 'post_detail' post.slug %}" 
+                                   class="btn btn-outline-primary btn-sm">
+                                    {% trans "O‘qish" %} →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+            <nav aria-label="Pagination" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+                                {% trans "Birinchi" %}
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+                                {% trans "Oldingi" %}
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_obj.number }}</span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+                                {% trans "Keyingi" %}
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+
+    {% else %}
+        <div class="text-center py-5 my-5">
+            <h3 class="text-muted mb-3">{% trans "Hech qanday maqola topilmadi" %}</h3>
+            <p class="text-muted mb-4">
+                {% trans "Boshqa kalit so‘zlar bilan qidirib ko‘ring yoki filtrni tozalang" %}
+            </p>
+            <a href="{% url 'post_list' %}" class="btn btn-outline-secondary">
+                {% trans "Barcha maqolalarni ko‘rish" %}
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

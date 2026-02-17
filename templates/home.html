@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Bosh sahifa" %}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Hero / Welcome -->
+    <div class="col-12 text-center py-5 bg-light rounded-4 mb-5">
+        <h1 class="display-4 fw-bold">{% trans "Xush kelibsiz!" %}</h1>
+        <p class="lead">{% trans "Python, Django va moliya haqida fikrlar" %}</p>
+    </div>
+    <a href="{% static 'Mehroj_Saparov_Resume.pdf' %}" target="_blank" download class="btn btn-outline-primary">
+        {% trans "Rezyumeni yuklab olish" %}
+    </a>
+
+    <!-- Latest Posts -->
+    <h2 class="mb-4">{% trans "So‘nggi maqolalar" %}</h2>
+    <div class="row g-4">
+        {% for post in latest_posts %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                {% if post.base_image %}
+                <img src="{{ post.base_image.url }}" class="card-img-top" alt="{{ post.title }}" style="height:200px; object-fit:cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text text-muted">{{ post.excerpt|safe|truncatewords:25 }}</p>
+                    <p class="small text-muted">
+                        <i class="bi bi-clock"></i> {{ post.reading_time }} daqiqa •
+                        <i class="bi bi-eye"></i> {{ post.views }}
+                    </p>
+                    <a href="{% url 'post_detail' post.slug %}" class="btn btn-primary">{% trans "O‘qish" %}</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>{% trans "Hozircha maqola yo‘q" %}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

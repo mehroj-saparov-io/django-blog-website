@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n widget_tweaks %}
+
+{% block title %}{% trans "Aloqa" %}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">{% trans "Biz bilan bog‘laning" %}</h2>
+                    <p class="text-center text-muted mb-5">
+                        {% trans "Savollaringiz bo‘lsa, quyidagi forma orqali yozing!" %}
+                    </p>
+
+                    <!-- Forma -->
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label for="id_name" class="form-label">{% trans "Ism" %}</label>
+                                {% render_field form.name class+="form-control form-control-lg" placeholder=ph_name %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="id_email" class="form-label">{% trans "Email" %}</label>
+                                {% render_field form.email class+="form-control form-control-lg" placeholder=ph_email %}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="id_subject" class="form-label">{% trans "Mavzu" %}</label>
+                                {% render_field form.subject class+="form-control form-control-lg" placeholder=ph_subject %}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="id_message" class="form-label">{% trans "Xabar" %}</label>
+                                {% render_field form.message class+="form-control form-control-lg" rows="6" placeholder=ph_message %}
+                            </div>
+
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                    {% trans "Yuborish" %}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

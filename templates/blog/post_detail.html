@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load i18n %}          <!-- ← bu qatorni qo'shing -->
+{% load static %}        <!-- agar hali qo'shilmagan bo'lsa -->
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <article class="blog-post">
+            <h1 class="display-4 fw-bold mb-4">{{ post.title }}</h1>
+            
+            <div class="d-flex align-items-center text-muted mb-4">
+                <small><i class="bi bi-calendar-event"></i> {{ post.created_at|date:"d F Y" }}</small>
+                <small class="mx-3"><i class="bi bi-clock"></i> {{ post.reading_time }} daqiqa o‘qish</small>
+                <small><i class="bi bi-eye"></i> {{ post.views }} ko‘rish</small>
+            </div>
+
+            {% if post.base_image %}
+            <img src="{{ post.base_image.url }}" class="img-fluid rounded shadow mb-4" alt="{{ post.title }}">
+            {% endif %}
+
+            <div class="lead mb-4">{{ post.excerpt|safe }}</div>
+
+            <div class="blog-content fs-5">
+                {{ post.content|safe }}
+            </div>
+
+            <div class="mt-5">
+                <h5>{% trans "Kategoriyalar" %}:</h5>
+                {% for cat in post.categories.all %}
+                <a href="{% url 'category_posts' cat.id %}" class="badge bg-primary me-2">{{ cat.name }}</a>
+                {% endfor %}
+            </div>
+        </article>
+    </div>
+</div>
+{% endblock %}
