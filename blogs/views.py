@@ -1,0 +1,5 @@
+from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse
+
+def home_page(request: HttpRequest) -> HttpResponse:
+    return HttpResponse('Home Page is Working')
