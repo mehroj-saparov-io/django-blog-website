@@ -6,9 +6,7 @@ from django.contrib import messages
 from .models import Post, Category, ContactMessage
 from django.utils.translation import gettext as _
 
-# ------------------------------
-# Home Page
-# ------------------------------
+
 class HomePageView(TemplateView):
     template_name = "home.html"
 
@@ -24,9 +22,6 @@ class HomePageView(TemplateView):
         }
         return context
 
-# ------------------------------
-# Post List (search + category filter + pagination)
-# ------------------------------
 class PostListView(ListView):
     model = Post
     template_name = "blog/post_list.html"
@@ -58,9 +53,6 @@ class PostListView(ListView):
             return int(limit)
         return self.paginate_by
 
-# ------------------------------
-# Post Detail + views count
-# ------------------------------
 class PostDetailView(DetailView):
     model = Post
     template_name = "blog/post_detail.html"
@@ -75,9 +67,6 @@ class PostDetailView(DetailView):
         obj.refresh_from_db()
         return obj
 
-# ------------------------------
-# Category posts
-# ------------------------------
 class CategoryPostListView(ListView):
     model = Post
     template_name = "blog/category_posts.html"
@@ -99,7 +88,7 @@ class ContactView(CreateView):
     model = ContactMessage
     template_name = "contact.html"
     fields = ["name", "email", "subject", "message"]
-    success_url = "/"  # yoki reverse_lazy('home')
+    success_url = "/" 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
